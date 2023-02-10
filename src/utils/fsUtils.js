@@ -11,4 +11,15 @@ async function readSpeakersData() {
   }
 }
 
-module.exports = readSpeakersData;
+async function registerNewSpeaker(newSpeaker) {
+    const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
+    const nextId = (data[(data.length - 1)].id + 1);
+    const speakers = JSON.parse(data);
+    const newSpeakerWId = [nextId, ...newSpeaker];
+    const updatedSpeakersList = speakers.push(newSpeakerWId); (
+    await fs.writeFile(path.resolve(__dirname, '../talker.json'),
+     JSON.stringify(updatedSpeakersList)));
+     return newSpeakerWId;
+}
+
+module.exports = { readSpeakersData, registerNewSpeaker };

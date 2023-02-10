@@ -1,7 +1,13 @@
 const express = require('express');
+const validatesAge = require('../middlewares/validatesAge');
+const validatesName = require('../middlewares/validatesName');
+const { validatesRating, 
+  validatesWatchedAtDate, 
+  validatesTalk } = require('../middlewares/validatesTalk');
+const validatesToken = require('../middlewares/validatesToken');
+const { readSpeakersData, registerNewSpeaker } = require('../utils/fsUtils');
 
 const router = express.Router();
-const readSpeakersData = require('../utils/fsUtils');
 
 router.get('/', async (_req, res) => {
   try {
@@ -24,6 +30,21 @@ router.get('/:id', async (req, res) => {
       return res.status(200).json(selectedSpeaker);
     }
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
+router.post('/', 
+validatesName,
+ validatesAge, 
+ validatesTalk, 
+ validatesWatchedAtDate, 
+ validatesRating, validatesToken, async (req, res) => {
+try {
+    const newSpeaker = req.body;
+    const newRegisteredSpeaker = await registerNewSpeaker(newSpeaker);
+    return res.status(201).json(newRegisteredSpeaker);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
