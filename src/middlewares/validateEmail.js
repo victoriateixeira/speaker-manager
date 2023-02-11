@@ -1,6 +1,6 @@
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
-  const isValidEmail = /\\S+@\\S+/;
+  const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   if (!email) {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }

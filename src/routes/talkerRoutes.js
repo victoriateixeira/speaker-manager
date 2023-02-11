@@ -36,11 +36,12 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', 
+validatesToken,
 validatesName,
  validatesAge, 
  validatesTalk, 
  validatesWatchedAtDate, 
- validatesRating, validatesToken, async (req, res) => {
+ validatesRating, async (req, res) => {
 try {
     const newSpeaker = req.body;
     const newRegisteredSpeaker = await registerNewSpeaker(newSpeaker);

@@ -7,6 +7,6 @@ function generateToken(size = 16) {
   .toString('base64')
   .slice(0, size);
 }
-console.log(generateToken());
+console.log(typeof (generateToken()));
 
 module.exports = generateToken;

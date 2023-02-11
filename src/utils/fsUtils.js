@@ -13,12 +13,12 @@ async function readSpeakersData() {
 
 async function registerNewSpeaker(newSpeaker) {
     const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
-    const nextId = (data[(data.length - 1)].id + 1);
     const speakers = JSON.parse(data);
-    const newSpeakerWId = [nextId, ...newSpeaker];
-    const updatedSpeakersList = speakers.push(newSpeakerWId); (
+    const nextId = (speakers[(speakers.length - 1)].id + 1);
+    const newSpeakerWId = { id: nextId, ...newSpeaker };
+    const updatedSpeakersList = [...speakers, newSpeakerWId]; 
     await fs.writeFile(path.resolve(__dirname, '../talker.json'),
-     JSON.stringify(updatedSpeakersList)));
+     JSON.stringify(updatedSpeakersList));
      return newSpeakerWId;
 }
 
