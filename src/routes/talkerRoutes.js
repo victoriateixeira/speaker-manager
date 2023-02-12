@@ -5,7 +5,11 @@ const { validatesRating,
   validatesWatchedAtDate, 
   validatesTalk } = require('../middlewares/validatesTalk');
 const validatesToken = require('../middlewares/validatesToken');
-const { readSpeakersData, registerNewSpeaker, editSpeaker } = require('../utils/fsUtils');
+const { readSpeakersData,
+   registerNewSpeaker, 
+   editSpeaker, 
+   removeSpeaker, 
+   getSpeakerByName } = require('../utils/fsUtils');
 
 const router = express.Router();
 
@@ -47,7 +51,7 @@ try {
     const newRegisteredSpeaker = await registerNewSpeaker(newSpeaker);
     return res.status(201).json(newRegisteredSpeaker);
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    return res.status(500).send({ message: error.message });
   }
 });
 
@@ -64,8 +68,36 @@ validatesName,
     const newUpdatedSpeaker = await editSpeaker(id, updatedSpeaker);
     return res.status(200).json(newUpdatedSpeaker);
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    return res.status(500).send({ message: error.message });
   }
+});
+
+router.delete('/:id', validatesToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await removeSpeaker(id);
+    return res.status(204).end();
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+});
+
+router.get('/search/', validatesToken, async (req, res) => {
+const { q } = req.params;
+
+if (!q) {
+    try {
+      const speakers = await readSpeakersData();
+      if (speakers.length > 0) {
+        return res.status(200).json(speakers);
+      } 
+      return res.status(200).json([]);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+}
+const filteredSpeakers = await getSpeakerByName(q);
+return res.status(200).json(filteredSpeakers);
 });
 
 module.exports = router;

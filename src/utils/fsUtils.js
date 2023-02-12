@@ -38,5 +38,27 @@ async function editSpeaker(id, updatedSpeaker) {
   JSON.stringify(updatedSpeakersList));
   return updatedSpeakerWithId;
 }
+async function removeSpeaker(id) {
+  const data = await fs.readFile(path.resolve(__dirname, PATH_TALKER));
+  const speakers = JSON.parse(data);
+  const updatedSpeakersList = speakers.filter((speaker) => speaker.id !== Number(id));
+  await fs.writeFile(path.resolve(__dirname, PATH_TALKER),
+  JSON.stringify(updatedSpeakersList));
+}
 
-module.exports = { readSpeakersData, registerNewSpeaker, editSpeaker };
+async function getSpeakerByName(name) {
+  const data = await fs.readFile(path.resolve(__dirname, PATH_TALKER));
+  const speakers = JSON.parse(data);
+  const searchedSpeakers = speakers
+  .filter((speaker) => speaker.name.toLowerCase().includes(name.toLowerCase()));
+  if (!searchedSpeakers) {
+     return [];
+  }
+  return searchedSpeakers;
+}
+
+module.exports = { readSpeakersData, 
+  registerNewSpeaker, 
+  editSpeaker, 
+  removeSpeaker, 
+  getSpeakerByName };
