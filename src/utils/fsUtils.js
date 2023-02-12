@@ -1,9 +1,11 @@
 const fs = require('fs').promises;
 const path = require('path');
 
+const PATH_TALKER = '../talker.json';
+
 async function readSpeakersData() {
   try {
-    const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
+    const data = await fs.readFile(path.resolve(__dirname, PATH_TALKER));
     const speakers = JSON.parse(data);
     return speakers;
   } catch (error) {
@@ -12,14 +14,29 @@ async function readSpeakersData() {
 }
 
 async function registerNewSpeaker(newSpeaker) {
-    const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
+    const data = await fs.readFile(path.resolve(__dirname, PATH_TALKER));
     const speakers = JSON.parse(data);
     const nextId = (speakers[(speakers.length - 1)].id + 1);
     const newSpeakerWId = { id: nextId, ...newSpeaker };
     const updatedSpeakersList = [...speakers, newSpeakerWId]; 
-    await fs.writeFile(path.resolve(__dirname, '../talker.json'),
+    await fs.writeFile(path.resolve(__dirname, PATH_TALKER),
      JSON.stringify(updatedSpeakersList));
      return newSpeakerWId;
 }
 
-module.exports = { readSpeakersData, registerNewSpeaker };
+async function editSpeaker(id, updatedSpeaker) {
+  const data = await fs.readFile(path.resolve(__dirname, PATH_TALKER));
+  const speakers = JSON.parse(data);
+  const updatedSpeakerWithId = { ...updatedSpeaker, id: Number(id) };
+  const updatedSpeakersList = speakers.map((speaker) => {
+    if (speaker.id !== Number(id)) {
+      return speaker;
+    } 
+      return updatedSpeakerWithId;
+  });
+  await fs.writeFile(path.resolve(__dirname, PATH_TALKER),
+  JSON.stringify(updatedSpeakersList));
+  return updatedSpeakerWithId;
+}
+
+module.exports = { readSpeakersData, registerNewSpeaker, editSpeaker };

@@ -5,7 +5,7 @@ const { validatesRating,
   validatesWatchedAtDate, 
   validatesTalk } = require('../middlewares/validatesTalk');
 const validatesToken = require('../middlewares/validatesToken');
-const { readSpeakersData, registerNewSpeaker } = require('../utils/fsUtils');
+const { readSpeakersData, registerNewSpeaker, editSpeaker } = require('../utils/fsUtils');
 
 const router = express.Router();
 
@@ -46,6 +46,23 @@ try {
     const newSpeaker = req.body;
     const newRegisteredSpeaker = await registerNewSpeaker(newSpeaker);
     return res.status(201).json(newRegisteredSpeaker);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
+router.put('/:id', 
+validatesToken,
+validatesName,
+ validatesAge, 
+ validatesTalk, 
+ validatesWatchedAtDate, 
+ validatesRating, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedSpeaker = req.body;
+    const newUpdatedSpeaker = await editSpeaker(id, updatedSpeaker);
+    return res.status(200).json(newUpdatedSpeaker);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
