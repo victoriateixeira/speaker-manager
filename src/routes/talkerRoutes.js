@@ -25,6 +25,19 @@ router.get('/', async (_req, res) => {
   }
 });
 
+router.get('/search/', validatesToken, async (req, res) => {
+  const { q } = req.query;
+  try {
+    if (!q) {
+          const speakers = await readSpeakersData();
+            return res.status(200).json(speakers);
+    }
+    const filteredSpeakers = await getSpeakerByName(q);
+    return res.status(200).json(filteredSpeakers);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -82,22 +95,22 @@ router.delete('/:id', validatesToken, async (req, res) => {
   }
 });
 
-router.get('/search/', validatesToken, async (req, res) => {
-const { q } = req.params;
+// router.get('/search/', validatesToken, async (req, res) => {
+// const { q } = req.params;
 
-if (!q) {
-    try {
-      const speakers = await readSpeakersData();
-      if (speakers.length > 0) {
-        return res.status(200).json(speakers);
-      } 
-      return res.status(200).json([]);
-    } catch (error) {
-      res.status(500).send({ message: error.message });
-    }
-}
-const filteredSpeakers = await getSpeakerByName(q);
-return res.status(200).json(filteredSpeakers);
-});
+// if (!q) {
+//     try {
+//       const speakers = await readSpeakersData();
+//       if (speakers.length > 0) {
+//         return res.status(200).json(speakers);
+//       } 
+//       return res.status(200).json([]);
+//     } catch (error) {
+//       res.status(500).send({ message: error.message });
+//     }
+// }
+// const filteredSpeakers = await getSpeakerByName(q);
+// return res.status(200).json(filteredSpeakers);
+// });
 
 module.exports = router;
