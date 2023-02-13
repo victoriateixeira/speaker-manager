@@ -14,8 +14,6 @@ async function readSpeakersData() {
 }
 
 async function registerNewSpeaker(newSpeaker) {
-    // const data = await fs.readFile(path.resolve(__dirname, PATH_TALKER));
-    // const speakers = JSON.parse(data);
     const speakers = await readSpeakersData();
     const nextId = (speakers[(speakers.length - 1)].id + 1);
     const newSpeakerWId = { id: nextId, ...newSpeaker };
@@ -26,8 +24,6 @@ async function registerNewSpeaker(newSpeaker) {
 }
 
 async function editSpeaker(id, updatedSpeaker) {
-  // const data = await fs.readFile(path.resolve(__dirname, PATH_TALKER));
-  // const speakers = JSON.parse(data);
   const speakers = await readSpeakersData();
   const updatedSpeakerWithId = { ...updatedSpeaker, id: Number(id) };
   const updatedSpeakersList = speakers.map((speaker) => {
@@ -41,8 +37,6 @@ async function editSpeaker(id, updatedSpeaker) {
   return updatedSpeakerWithId;
 }
 async function removeSpeaker(id) {
-  // const data = await fs.readFile(path.resolve(__dirname, PATH_TALKER));
-  // const speakers = JSON.parse(data);
   const speakers = await readSpeakersData();
   const updatedSpeakersList = speakers.filter((speaker) => speaker.id !== Number(id));
   await fs.writeFile(path.resolve(__dirname, PATH_TALKER),
@@ -50,14 +44,9 @@ async function removeSpeaker(id) {
 }
 
 async function getSpeakerByName(name) {
-  // const data = await fs.readFile(path.resolve(__dirname, PATH_TALKER));
-  // const speakers = JSON.parse(data);
   const speakers = await readSpeakersData();
   const searchedSpeakers = speakers
   .filter((speaker) => speaker.name.includes(name));
-  // if (searchedSpeakers.length === 0) {
-  //    return [];
-  // }
   return searchedSpeakers;
 }
 

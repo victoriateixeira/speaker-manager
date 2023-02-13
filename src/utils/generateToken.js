@@ -1,7 +1,6 @@
 const Crypto = require('crypto');
 
 function generateToken(size = 16) {
-  // return crypto.randomBytes(8).toString('hex');
   return Crypto
   .randomBytes(size)
   .toString('base64')
